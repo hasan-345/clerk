@@ -18,11 +18,11 @@ export async function POST(request:NextRequest) {
           }
 
         const user = await clerkClient.users.getUser(userId);  
-        const {address,phoneNumber,firstName,lastName,photo,username,email} = await request.json(); 
+        const {address,phoneNumber,firstName,lastName,photo,email} = await request.json(); 
 
         const userUpdate = await User.findOneAndUpdate({clerkId: user.id},{
             $set: {
-                address,phoneNumber,firstName,lastName,photo,username,email
+                address,phoneNumber,firstName,lastName,photo,email
             }
         },{
             new: true

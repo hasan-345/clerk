@@ -22,10 +22,6 @@ const userSchema:Schema<UserType> = new Schema({
         type: String, 
         required:true
      },
-    username:{
-        type: String, 
-        required:true
-     },
      firstName:{
         type: String, 
         required:true
@@ -40,11 +36,9 @@ const userSchema:Schema<UserType> = new Schema({
      },
       address: {
          type: String, 
-         required:true
      },
      phoneNumber:{
       type: Number, 
-      required:true
      },
      role:{ 
       type: String, 

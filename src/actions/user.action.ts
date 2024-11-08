@@ -9,6 +9,8 @@ export async function createUser(user:any) {
 
         const userModel = await User.create(user)
 
+        console.log(userModel)
+
         return JSON.parse(JSON.stringify(userModel))
 
     } catch (error) {
