@@ -1,7 +1,28 @@
-import { authMiddleware } from '@clerk/nextjs/server'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export default authMiddleware({
-  publicRoutes: ['/','/api/webhooks/clerk'],
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
+const isLandingPage = createRouteMatcher(["/"])
+
+export default clerkMiddleware((auth,request)=>{
+   
+  const {userId } = auth()
+
+  if (isLandingPage(request)) {
+      if (userId) {
+        return NextResponse.redirect(new URL("/dashboard",request.url))
+      }
+
+      return NextResponse.next()
+  }
+
+  if (isProtectedRoute(request)) {
+    // Protect the route by requiring authentication
+    if (!userId) {
+      return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
+  }
+    return NextResponse.next()
 })
 
 export const config = {
