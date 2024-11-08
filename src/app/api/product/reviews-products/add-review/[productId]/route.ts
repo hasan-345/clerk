@@ -1,8 +1,6 @@
 import { dbConnection } from "@/lib/dbConfig";
-import { Product } from "@/models/Product.model";
 import { Rating } from "@/models/Rating.model";
 import { User } from "@/models/User.model";
-import { productSchema } from "@/Schema/ProductSchema";
 import { ratingSchema } from "@/Schema/Rating";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";

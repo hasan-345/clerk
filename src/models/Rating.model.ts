@@ -31,7 +31,10 @@ const ratingSchema:Schema<RatingType> = new Schema({
         type: [String],
         required: true
        },
-       createdBy: Date.now
+       createdBy:{
+              type: Date,
+              default: Date.now
+       },
 })
 
 export const Rating = (models.users as Model<RatingType>) || model<RatingType>("rating",ratingSchema)
