@@ -32,7 +32,7 @@ export async function POST(request:NextRequest,{params}:{params:{productId:strin
 
         const productDetails = await request.json();
         
-        const {name,price,discountPrice,description,photoes,stock,category} = productSchema.parse(productDetails);
+        const {name,price,discountPrice,description,photos,stock,category} = productSchema.parse(productDetails);
 
         const product = await Product.findByIdAndUpdate(productId,{
             $set:{
@@ -40,7 +40,7 @@ export async function POST(request:NextRequest,{params}:{params:{productId:strin
                 price,
                 discountPrice,
                 description,
-                photoes,
+                photos,
                 stock,
                 category
             }
