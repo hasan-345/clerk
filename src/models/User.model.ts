@@ -1,16 +1,16 @@
-import mongoose, { Model, model, models, Schema } from "mongoose";
+import { Model, model, models, Schema } from "mongoose";
 
 
 export interface UserType extends Document {
    clerkId: string;
    email: string;
-   username: string;
    firstName: string;
    lastName: string;
    photo: string;
-   address: string;
-   phoneNumber: number;
+   address?: string;
+   phoneNumber?: number;
    role?: string; // Optional since it has a default value
+   coins: number;
  }
 
 const userSchema:Schema<UserType> = new Schema({
@@ -43,6 +43,10 @@ const userSchema:Schema<UserType> = new Schema({
      role:{ 
       type: String, 
       default: "Buyer"
+     },
+     coins:{
+      type: Number,
+      default: 0
      }
 })
 
