@@ -7,9 +7,7 @@ export async function createUser(user:any) {
     try {
         await dbConnection()
 
-        const userModel = new User(user)
-
-        await userModel.save()
+        const userModel = await User.create(user)
 
         console.log(userModel)
 
