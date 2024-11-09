@@ -68,6 +68,7 @@ export async function POST(req: Request){
        console.log(user);
 
        const newUser = await createUser(user)
+       console.log(newUser);
        
        if (newUser) {
           await clerkClient.users.updateUserMetadata(id,{

@@ -4,7 +4,6 @@ import mongoose, { Model, model, models, Schema } from "mongoose";
 export interface UserType extends Document {
    clerkId: string;
    email: string;
-   username?: string;
    firstName: string;
    lastName: string;
    photo: string;
@@ -23,11 +22,8 @@ const userSchema:Schema<UserType> = new Schema({
         type: String, 
         required:true
      },
-     username:{
-        type: String
-     },
      firstName:{
-        type: String, 
+        type: String,
         required:true
      },
      lastName:{
