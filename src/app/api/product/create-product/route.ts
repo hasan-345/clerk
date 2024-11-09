@@ -4,6 +4,13 @@ import { User } from "@/models/User.model";
 import { productSchema } from "@/Schema/ProductSchema";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+    api_key: process.env.CLOUDINARY_API_KEY!,
+    api_secret: process.env.CLOUDINARY_API_SECRET!,
+  });
 
 export async function POST(request:NextRequest) {
    await dbConnection();
@@ -17,7 +24,7 @@ export async function POST(request:NextRequest) {
             { success: false, message: "Unauthorized"},
             { status: 401 }
             );
-        }
+        } 
  
         const user = await clerkClient.users.getUser(userId);
         const userDetails = await User.findOne({clerkId: user.id});
@@ -25,27 +32,54 @@ export async function POST(request:NextRequest) {
             return Response.json({success: false, message: "User is not fetched"})
         }
 
+        console.log(userDetails);
+        
         if (userDetails.role == "Buyer") {
             return Response.json({success: false, message: "Buyer can't upload items"})
         }
 
         const productDetails = await request.json();
+        console.log(productDetails)
         
-        const {name,price,discountPrice,description,photoes,stock,category} = productSchema.parse(productDetails);
+        const {name,price,discountPrice,description,photos,stock,category} = productSchema.parse(productDetails);
+
+        const uploadedPhotos: string[]  = [];
+        
+        for(const photo of photos) {
+            const uploadResponse = await cloudinary.uploader.upload(photo, {
+              folder: "products",
+            });
+
+            if (!uploadResponse) {
+                return Response.json({success: false,message: "Failed to upload images in cloudinary"},{status:500});
+            }
+
+            uploadedPhotos.push(uploadResponse.secure_url);
+          }
+
+          console.log(uploadedPhotos)
 
         const product = new Product({
             name,
             price,
             discountPrice,
             description,
-            photoes,
+            photos: uploadedPhotos,
             stock,
             category 
         })
 
-        await product.save();
+        const newProduct = await product.save();
 
-        return Response.json({success: true,message: "Successfully created product."},{status:200});
+        if (!newProduct) {
+            return Response.json({success: false,message: "Failed to upload product"},{status:500});
+        }
+
+        const validProduct = await Product.findById(newProduct._id)
+        
+        console.log(validProduct);
+        
+        return Response.json({success: true,message: "Successfully created product.",validProduct},{status:200});
 
         } catch (error) {
           return Response.json({success: false, message: "unexpected error" + error},{status:500})
