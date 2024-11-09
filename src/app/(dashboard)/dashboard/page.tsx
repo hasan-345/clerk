@@ -1,5 +1,4 @@
 "use client";
-import Cards from '@/components/Cards'
 import React, { useState } from 'react'
 
 const Dashboard = () => {
